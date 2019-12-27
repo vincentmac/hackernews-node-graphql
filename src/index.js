@@ -19,19 +19,28 @@ function getLinkById(id) {
 	}
 }
 
+function persistLink(link) {
+	for (let i = 0;  i < links.length; i++) {
+		let l = links[i];
+		if (l.id == link.id) {
+			links[i] = link;
+		}
+	}
+}
+
 const resolvers = {
 	Query: {
 		info: () => `This is the API of a Hackernews Clone`,
 		feed: () => links,
-		// info: () => null 
-		link: (parent, args) => {
+		// info: () => null
+		link: (_parent, args) => {
 			let {id} = args;
 			return getLinkById(id);
 		}
 	},
 	Mutation: {
 		// 2
-		post: (parent, args) => {
+		post: (_parent, args) => {
 			const link = {
 				id: `link-${idCount++}`,
 				description: args.description,
@@ -40,7 +49,7 @@ const resolvers = {
 			links.push(link);
 			return link;
 		},
-		updateLink: (parent, args) => {
+		updateLink: (_parent, args) => {
 			let {id, url, description} = args;
 			let link = getLinkById(id);
 
@@ -51,7 +60,8 @@ const resolvers = {
 			if (description) {
 				link.description  = description;
 			}
-			// TODO
+
+			persistLink(link)
 		},
 		deleteLink: (parent, args) => {
 			// TODO
