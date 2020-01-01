@@ -1,8 +1,17 @@
 # schema.graphql is used to define what this graphql server can do.
 
+enum LinkOrderByInput {
+  description_ASC
+  description_DESC
+  url_ASC
+  url_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
 type Query {
   info: String!
-  feed: [Link!]!
+  feed(filter: String, skip: Int, first: Int, orderBy: LinkOrderByInput): Feed!
   link(id: ID!): Link # Fetch a single link by its `id`
 }
 
@@ -13,6 +22,11 @@ type Mutation {
   vote(linkId: ID!): Vote
   # updateLink(id: ID!, url: String, description: String): Link
   # deleteLink(id: ID!): Link
+}
+
+type Feed {
+  links: [Link!]!
+  count: Int!
 }
 
 type AuthPayload {
